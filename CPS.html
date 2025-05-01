@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPS Tester</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #111;
+      color: white;
+      padding: 50px;
+    }
+    #click-area {
+      background-color: #333;
+      padding: 50px;
+      margin: 20px auto;
+      cursor: pointer;
+      border-radius: 10px;
+      width: 300px;
+      user-select: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Clicks Per Second Tester</h1>
+  <p>Click as fast as you can for 5 seconds!</p>
+  <div id="click-area">Click here to start</div>
+  <p id="result"></p>
+
+  <script>
+    const clickArea = document.getElementById("click-area");
+    const result = document.getElementById("result");
+
+    let clicks = 0;
+    let isTesting = false;
+    let startTime;
+
+    clickArea.addEventListener("click", () => {
+      if (!isTesting) {
+        isTesting = true;
+        clicks = 0;
+        result.textContent = "";
+        clickArea.textContent = "Click!";
+        startTime = Date.now();
+
+        const timer = setInterval(() => {
+          const elapsed = (Date.now() - startTime) / 1000;
+          if (elapsed >= 5) {
+            clearInterval(timer);
+            isTesting = false;
+            const cps = (clicks / 5).toFixed(2);
+            result.textContent = `Your CPS: ${cps}`;
+            clickArea.textContent = "Click here to try again";
+          }
+        }, 100);
+      }
+
+      if (isTesting) {
+        clicks++;
+      }
+    });
+  </script>
+</body>
+</html>

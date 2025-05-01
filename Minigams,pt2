@@ -3,462 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Game Portal</title>
+  <title>Meme Noise Site</title>
   <style>
     body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #121212;
-  color: white;
-  background-size: cover;
-  background-position: center;
-  transition: background-image 0.5s ease-in-out;
-}
-    .hidden { display: none; }
-    .game-select {
-      margin: 20px;
-    }
-    .game-container {
-      margin-top: 30px;
-    }
-    button, select {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      gap: 5px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
       justify-content: center;
-      margin-top: 20px;
+      align-items: center;
+      font-family: sans-serif;
+      color: white;
+      text-align: center;
+      background: black;
+      transition: background-color 0.1s ease-in-out;
     }
-    .cell {
-      width: 100px;
-      height: 100px;
-      font-size: 48px;
-      background: #1e1e1e;
-      border: 2px solid #00ffff;
-      color: #00ffff;
-      cursor: pointer;
-    }
-    .option-btn {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      background: #333;
-      color: #fff;
-      width: 60%;
+    h1 {
+      font-size: 2em;
     }
   </style>
 </head>
 <body>
-  <h1>🎮 Mini Game Portal</h1>
-  
-<div id="settings-panel" class="hidden" style="margin-top: 10px;">
-  <label for="theme-select">Theme:</label>
-  <select id="theme-select" onchange="changeTheme()">
-    <option value="dark">Dark</option>
-    <option value="light">Light</option>
-  </select>
-
-  <label for="background-select">Background:</label>
-  <select id="background-select" onchange="changeBackground()">
-    <option value="none">Default</option>
-    <option value="nature">Nature</option>
-    <option value="city">City</option>
-  </select>
-
-
-    <button onclick="toggleSettings()" style="position: absolute; top: 20px; right: 20px;">⚙️ Settings</button><label for="game-picker">Choose a game:</label>
-<select id="game-picker" onchange="switchGame()">
-  
-  <option value="cps">CPS Tester</option>
-  <option value="tictactoe">Tic Tac Toe</option>
-  <option value="trivia">Trivia</option>
-  
-</select>
-    
-  </div>
-
-  
-
-<div id="cps" class="game-container hidden">
-    <h2>CPS Tester</h2>
-    <label>Test Duration: <input id="duration" type="number" value="5" min="1" max="15" /></label>
-    <div id="click-area" style="margin: 20px auto; padding: 40px; background: #333; width: 200px; cursor: pointer;">Click to Start</div>
-    <p id="countdown"></p>
-    <p id="result"></p>
-    <button id="reset-btn" class="hidden">Reset</button>
-  </div>
-
-  
-    <div id="tictactoe" class="game-container hidden">
-  <h2>Tic Tac Toe</h2>
-  <select id="game-mode">
-    <option value="1v1">1v1 (Local)</option>
-    <option value="easy">Easy AI</option>
-    <option value="hard">Hard AI</option>
-    <option value="impossible">Impossible AI</option>
-  </select>
-  <div class="grid" id="board"></div>
-  <p id="winner"></p>
-  <p id="tictactoe-score">X: 0 | O: 0</p>
-  <button onclick="setupTicTacToe()">Restart Game</button>
-</div>
-  </div>
-
-  <div id="trivia" class="game-container hidden">
-    <h2>Trivia Game</h2>
-    <label for="trivia-category">Choose Category:</label>
-    <select id="trivia-category" onchange="startTrivia()">
-      <option value="general">General</option>
-      <option value="sports">Sports</option>
-      <option value="gaming">Gaming</option>
-    </select>
-    <p id="trivia-question"></p>
-    <div id="trivia-options"></div>
-    <p id="trivia-feedback"></p>
-    <p id="trivia-score"></p>
-    <button onclick="nextTriviaQuestion()">Next Question</button>
-  </div>
+  <h1>💥 Welcome to the Meme Noise Site! 💥<br>
+  Try closing the tab... we dare you 😈</h1>
 
   <script>
-    const cpsEl = document.getElementById("cps");
-    const ticEl = document.getElementById("tictactoe");
-    const triviaEl = document.getElementById("trivia");
-    const gamePicker = document.getElementById("game-picker");
+    // Play weird looping noise
+    const sound = new Audio("https://www.myinstants.com/media/sounds/vine-boom.mp3");
+    sound.loop = true;
+    sound.volume = 0.5;
+    sound.play();
 
-    function switchGame() {
-  const selectedGame = gamePicker.value;
-  cpsEl.classList.add("hidden");
-  ticEl.classList.add("hidden");
-  triviaEl.classList.add("hidden");
-  document.getElementById('settings-panel').classList.add('hidden');
-
-  if (selectedGame === 'cps') {
-    cpsEl.classList.remove("hidden");
-  } else if (selectedGame === 'tictactoe') {
-    ticEl.classList.remove("hidden");
-    setupTicTacToe();
-  } else if (selectedGame === 'trivia') {
-    triviaEl.classList.remove("hidden");
-    startTrivia();
-  }
-} else if (selectedGame === 'trivia') {
-    triviaEl.classList.remove("hidden");
-    startTrivia();
-  } else {
-    document.getElementById("homepage").classList.remove("hidden");
-  }
-}
-    }
-
-    // === TICTACTOE ===
-    document.getElementById("game-mode").addEventListener("change", setupTicTacToe);
-
-    let xWins = 0;
-let oWins = 0;
-
-function setupTicTacToe() {
-      const board = document.getElementById("board");
-      const winnerText = document.getElementById("winner");
-      const mode = document.getElementById("game-mode").value;
-      board.innerHTML = "";
-      winnerText.textContent = "";
-      let turn = 'X';
-      let cells = Array(9).fill(null);
-
-      for (let i = 0; i < 9; i++) {
-        const btn = document.createElement("button");
-        btn.className = "cell";
-        btn.onclick = () => {
-          if (!btn.textContent && !checkWinner(cells)) {
-            btn.textContent = turn;
-            cells[i] = turn;
-            if (checkWinner(cells)) {
-        winnerText.textContent = `${turn} wins!`;
-        if (turn === 'X') xWins++;
-        else oWins++;
-        document.getElementById("tictactoe-score").textContent = `X: ${xWins} | O: ${oWins}`;
-        return;
-            } else if (!cells.includes(null)) {
-              winnerText.textContent = "It's a draw!";
-              return;
-            }
-            turn = turn === 'X' ? 'O' : 'X';
-            if (mode !== '1v1' && turn === 'O') {
-              setTimeout(() => aiMove(cells, mode), 300);
-            }
-          }
-        };
-        board.appendChild(btn);
+    // Fake money notifications
+    let money = 0;
+    function showMoneyNotification() {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(`🤑 You earned $${++money}!`);
       }
     }
 
-    function aiMove(cells, mode) {
-      let move;
-      if (mode === 'easy') {
-        const empty = cells.map((v, i) => v ? null : i).filter(v => v !== null);
-        move = empty[Math.floor(Math.random() * empty.length)];
-      } else if (mode === 'hard') {
-        move = bestMove(cells, 'O');
-      } else if (mode === 'impossible') {
-        move = minimax(cells, 'O').index;
-      }
-      if (move != null) {
-        const board = document.getElementById("board");
-        board.children[move].click();
-      }
-    }
-
-    function bestMove(cells, ai) {
-      for (let i = 0; i < cells.length; i++) {
-        if (!cells[i]) return i;
-      }
-    }
-
-    function minimax(newBoard, player) {
-      const availSpots = newBoard.map((v, i) => v ? null : i).filter(v => v !== null);
-      const huPlayer = 'X';
-      const aiPlayer = 'O';
-      if (checkWin(newBoard, huPlayer)) return {score: -10};
-      if (checkWin(newBoard, aiPlayer)) return {score: 10};
-      if (availSpots.length === 0) return {score: 0};
-      const moves = [];
-      for (let i = 0; i < availSpots.length; i++) {
-        const move = {};
-        move.index = availSpots[i];
-        newBoard[availSpots[i]] = player;
-        const result = minimax(newBoard, player === aiPlayer ? huPlayer : aiPlayer);
-        move.score = result.score;
-        newBoard[availSpots[i]] = null;
-        moves.push(move);
-      }
-      let bestMove;
-      if (player === aiPlayer) {
-        let bestScore = -Infinity;
-        for (let i = 0; i < moves.length; i++) {
-          if (moves[i].score > bestScore) {
-            bestScore = moves[i].score;
-            bestMove = i;
-          }
+    if ("Notification" in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          setInterval(showMoneyNotification, 1000);
         }
-      } else {
-        let bestScore = Infinity;
-        for (let i = 0; i < moves.length; i++) {
-          if (moves[i].score < bestScore) {
-            bestScore = moves[i].score;
-            bestMove = i;
-          }
-        }
-      }
-      return moves[bestMove];
-    }
-
-    function checkWinner(cells) {
-      return checkWin(cells, 'X') || checkWin(cells, 'O');
-    }
-
-    function checkWin(board, player) {
-      const winLines = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ];
-      return winLines.some(([a,b,c]) => board[a] === player && board[b] === player && board[c] === player);
-    }
-
-    // === CPS TESTER ===
-    const clickArea = document.getElementById("click-area");
-    const result = document.getElementById("result");
-    const resetBtn = document.getElementById("reset-btn");
-    const countdownEl = document.getElementById("countdown");
-    const durationInput = document.getElementById("duration");
-    let clicks = 0;
-    let isTesting = false;
-
-    clickArea.addEventListener("click", () => {
-      if (!isTesting) {
-        clickArea.style.pointerEvents = "none";
-        startCountdown(() => {
-          isTesting = true;
-          clicks = 0;
-          result.textContent = "";
-          clickArea.textContent = "Click!";
-          clickArea.style.pointerEvents = "auto";
-          const testDuration = parseInt(durationInput.value) || 5;
-          const startTime = Date.now();
-
-          const timer = setInterval(() => {
-            const elapsed = (Date.now() - startTime) / 1000;
-            if (elapsed >= testDuration) {
-              clearInterval(timer);
-              isTesting = false;
-              const cps = (clicks / testDuration).toFixed(2);
-              result.textContent = `Your CPS: ${cps}`;
-              clickArea.textContent = "Test complete";
-              clickArea.style.pointerEvents = "none";
-              resetBtn.classList.remove("hidden");
-            }
-          }, 100);
-        });
-      } else {
-        clicks++;
-      }
-    });
-
-    resetBtn.addEventListener("click", () => {
-      clicks = 0;
-      result.textContent = "";
-      countdownEl.textContent = "";
-      clickArea.textContent = "Click to Start";
-      isTesting = false;
-      resetBtn.classList.add("hidden");
-      clickArea.style.pointerEvents = "auto";
-    });
-
-    function startCountdown(callback) {
-      let count = 3;
-      countdownEl.textContent = count;
-      const countdownTimer = setInterval(() => {
-        count--;
-        if (count > 0) {
-          countdownEl.textContent = count;
-        } else {
-          clearInterval(countdownTimer);
-          countdownEl.textContent = "Go!";
-          setTimeout(() => {
-            countdownEl.textContent = "";
-            callback();
-          }, 500);
-        }
-      }, 1000);
-    }
-
-    // === TRIVIA ===
-    const categories = {
-  general: [
-    { q: "What is the capital of France?", a: ["Paris", "London", "Rome", "Berlin"], correct: 0 },
-    { q: "What is 5 + 3?", a: ["10", "8", "7", "6"], correct: 1 },
-    { q: "Which planet is known as the Red Planet?", a: ["Earth", "Mars", "Jupiter", "Saturn"], correct: 1 },
-    { q: "Who wrote 'To Be or Not To Be'?", a: ["Shakespeare", "Einstein", "Newton", "Tesla"], correct: 0 },
-    { q: "What year did the Titanic sink?", a: ["1912", "1918", "1905", "1921"], correct: 0 },
-    { q: "Which animal is known as the King of the Jungle?", a: ["Tiger", "Elephant", "Lion", "Panther"], correct: 2 },
-    { q: "What is the largest ocean?", a: ["Atlantic", "Pacific", "Indian", "Arctic"], correct: 1 },
-    { q: "Which instrument has 88 keys?", a: ["Violin", "Flute", "Piano", "Guitar"], correct: 2 },
-    { q: "What gas do plants breathe in?", a: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 1 },
-    { q: "How many days in a leap year?", a: ["365", "366", "364", "360"], correct: 1 }
-  ],
-  sports: [
-    { q: "Which team won the 2022 FIFA World Cup?", a: ["France", "Brazil", "Argentina", "Germany"], correct: 2 },
-    { q: "How many players are on a football team on the field?", a: ["9", "10", "11", "12"], correct: 2 },
-    { q: "Which NFL team has a star on its helmet?", a: ["Patriots", "Giants", "Cowboys", "Packers"], correct: 2 },
-    { q: "Which country has won the most Olympic gold medals?", a: ["China", "Russia", "USA", "Germany"], correct: 2 },
-    { q: "How long is a soccer match?", a: ["90 mins", "80 mins", "100 mins", "75 mins"], correct: 0 },
-    { q: "What sport uses a puck?", a: ["Hockey", "Baseball", "Cricket", "Lacrosse"], correct: 0 },
-    { q: "Which NBA player is known as 'King James'?", a: ["Kobe", "Durant", "Curry", "LeBron"], correct: 3 },
-    { q: "What color are the goal posts in American football?", a: ["White", "Red", "Yellow", "Blue"], correct: 2 },
-    { q: "What is a hat trick in soccer?", a: ["3 goals", "2 assists", "1 goal", "4 passes"], correct: 0 },
-    { q: "What sport does Serena Williams play?", a: ["Golf", "Tennis", "Soccer", "Swimming"], correct: 1 }
-  ],
-  gaming: [
-    { q: "What is the name of the main character in The Legend of Zelda?", a: ["Zelda", "Link", "Ganondorf", "Mario"], correct: 1 },
-    { q: "Which game popularized battle royale genre?", a: ["Minecraft", "Fortnite", "Call of Duty", "PUBG"], correct: 3 },
-    { q: "In which game do you catch creatures using Poké Balls?", a: ["Yu-Gi-Oh!", "Digimon", "Pokémon", "Magic"], correct: 2 },
-    { q: "What color is Sonic the Hedgehog?", a: ["Red", "Green", "Blue", "Yellow"], correct: 2 },
-    { q: "What company makes the PlayStation?", a: ["Microsoft", "Nintendo", "Sony", "Apple"], correct: 2 },
-    { q: "What game features creepers and blocks?", a: ["Minecraft", "Roblox", "Terraria", "Rust"], correct: 0 },
-    { q: "Who is the mascot of Nintendo?", a: ["Luigi", "Mario", "Pikachu", "Kirby"], correct: 1 },
-    { q: "What’s the main item in Mario Kart?", a: ["Green Shell", "Banana", "Red Shell", "Blue Shell"], correct: 3 },
-    { q: "Which game includes Verdansk?", a: ["Fortnite", "Apex Legends", "Call of Duty: Warzone", "Overwatch"], correct: 2 },
-    { q: "What is the name of Fortnite’s building material NOT made of metal or brick?", a: ["Wood", "Glass", "Clay", "Plastic"], correct: 0 }
-  ]
-};
-    let currentQuestion = 0;
-    let score = 0;
-
-    function startTrivia() {
-  const category = document.getElementById("trivia-category").value;
-  questions = shuffleArray(categories[category]).slice(0, 10);
-  currentQuestion = 0;
-  score = 0;
-  showQuestion();
-}
-
-    function showQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById("trivia-question").textContent = q.q;
-      const optionsDiv = document.getElementById("trivia-options");
-      optionsDiv.innerHTML = "";
-      q.a.forEach((option, i) => {
-        const btn = document.createElement("button");
-        btn.className = "option-btn";
-        btn.textContent = option;
-        btn.onclick = () => checkAnswer(i);
-        optionsDiv.appendChild(btn);
       });
-      document.getElementById("trivia-feedback").textContent = "";
-      document.getElementById("trivia-score").textContent = `Score: ${score}/${questions.length}`;
     }
 
-    function checkAnswer(selected) {
-      const q = questions[currentQuestion];
-      if (selected === q.correct) {
-        document.getElementById("trivia-feedback").textContent = "Correct!";
-        score++;
-      } else {
-        document.getElementById("trivia-feedback").textContent = `Wrong! Correct answer: ${q.a[q.correct]}`;
-      }
-      document.getElementById("trivia-score").textContent = `Score: ${score}/${questions.length}`;
-    }
-
-    function nextTriviaQuestion() {
-      if (currentQuestion < questions.length - 1) {
-        currentQuestion++;
-        showQuestion();
-      } else {
-        document.getElementById("trivia-question").textContent = "Quiz Complete!";
-        document.getElementById("trivia-options").innerHTML = "";
-        document.getElementById("trivia-feedback").textContent = "";
-        document.getElementById("trivia-score").textContent = `Final Score: ${score}/${questions.length}`;
-      }
-    }
-  
-    function shuffleArray(array) {
-      const shuffled = array.slice();
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    }
-
-    function changeTheme() {
-      const theme = document.getElementById("theme-select").value;
-      document.body.style.color = theme === 'light' ? '#000' : '#fff';
-      document.body.style.backgroundColor = theme === 'light' ? '#f5f5f5' : '#121212';
-    }
-
-    function changeBackground() {
-      const bg = document.getElementById("background-select").value;
-      if (bg === 'nature') {
-        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?fit=crop&w=1400&q=80')";
-      } else if (bg === 'city') {
-        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1494526585095-c41746248156?fit=crop&w=1400&q=80')";
-      } else {
-        document.body.style.backgroundImage = "none";
-      }
-    }
-
-    function toggleSettings() {
-      const panel = document.getElementById('settings-panel');
-      panel.classList.toggle('hidden');
-    }
-</script>
-<button onclick="document.getElementById('game-picker').value = 'cps'; switchGame();" style="position: fixed; bottom: 20px; left: 20px; z-index: 999;">🏠 Back to Menu</button>
+    // Flashing background
+    setInterval(() => {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    }, 100);
+  </script>
 </body>
 </html>

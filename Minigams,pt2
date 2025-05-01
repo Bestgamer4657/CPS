@@ -134,7 +134,6 @@
 
     function switchGame() {
   const selectedGame = gamePicker.value;
-  document.getElementById("homepage").classList.add("hidden");
   cpsEl.classList.add("hidden");
   ticEl.classList.add("hidden");
   triviaEl.classList.add("hidden");
@@ -148,13 +147,8 @@
   } else if (selectedGame === 'trivia') {
     triviaEl.classList.remove("hidden");
     startTrivia();
-  } else {
-    document.getElementById("homepage").classList.remove("hidden");
   }
-} else if (selectedGame === 'tictactoe') {
-    ticEl.classList.remove("hidden");
-    setupTicTacToe();
-  } else if (selectedGame === 'trivia') {
+} else if (selectedGame === 'trivia') {
     triviaEl.classList.remove("hidden");
     startTrivia();
   } else {

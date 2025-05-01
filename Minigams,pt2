@@ -57,7 +57,7 @@
 </head>
 <body>
   <h1>🎮 Mini Game Portal</h1>
-  <button onclick="toggleSettings()" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">⚙️ Settings</button>
+  
 <div id="settings-panel" class="hidden" style="margin-top: 10px;">
   <label for="theme-select">Theme:</label>
   <select id="theme-select" onchange="changeTheme()">
@@ -74,8 +74,7 @@
 </div>
 
 
-    <label for="game-picker">Choose a game:</label>
-    <select id="game-picker" onchange="switchGame()">
+    <button onclick="toggleSettings()">⚙️ Settings</button><br><label for="game-picker">Choose a game:</label>
       <option value="cps">CPS Tester</option>
       <option value="tictactoe">Tic Tac Toe</option>
       <option value="trivia">Trivia</option>
@@ -92,7 +91,7 @@
     <button id="reset-btn" class="hidden">Reset</button>
   </div>
 
-  $1
+  
     <p id="tictactoe-score">X: 0 | O: 0</p>
     <button onclick="setupTicTacToe()">Restart Game</button>
   </div>

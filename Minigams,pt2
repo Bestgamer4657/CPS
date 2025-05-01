@@ -75,10 +75,12 @@
 
 
     <button onclick="toggleSettings()">⚙️ Settings</button><br><label for="game-picker">Choose a game:</label>
-      <option value="cps">CPS Tester</option>
-      <option value="tictactoe">Tic Tac Toe</option>
-      <option value="trivia">Trivia</option>
-    </select>
+<select id="game-picker" onchange="switchGame()">
+  <option value="cps">CPS Tester</option>
+  <option value="tictactoe">Tic Tac Toe</option>
+  <option value="trivia">Trivia</option>
+  <option value="settings">⚙️ Settings</option>
+</select>
     
   </div>
 
@@ -119,6 +121,15 @@
     const gamePicker = document.getElementById("game-picker");
 
     function switchGame() {
+  if (gamePicker.value === 'settings') {
+    document.getElementById('settings-panel').classList.remove('hidden');
+    cpsEl.classList.add('hidden');
+    ticEl.classList.add('hidden');
+    triviaEl.classList.add('hidden');
+    return;
+  } else {
+    document.getElementById('settings-panel').classList.add('hidden');
+  }
       cpsEl.classList.add("hidden");
       ticEl.classList.add("hidden");
       triviaEl.classList.add("hidden");
@@ -431,3 +442,4 @@ function setupTicTacToe() {
 </script>
 </body>
 </html>
+

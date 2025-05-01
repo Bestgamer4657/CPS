@@ -71,7 +71,6 @@
     <option value="nature">Nature</option>
     <option value="city">City</option>
   </select>
-</div>
 
 
     <button onclick="toggleSettings()" style="position: absolute; top: 20px; right: 20px;">⚙️ Settings</button><label for="game-picker">Choose a game:</label>
@@ -123,7 +122,6 @@
       <option value="sports">Sports</option>
       <option value="gaming">Gaming</option>
     </select>
-    <h2>Trivia Game</h2>
     <p id="trivia-question"></p>
     <div id="trivia-options"></div>
     <p id="trivia-feedback"></p>
@@ -148,6 +146,15 @@
   if (selectedGame === 'cps') {
     cpsEl.classList.remove("hidden");
   } else if (selectedGame === 'tictactoe') {
+    ticEl.classList.remove("hidden");
+    setupTicTacToe();
+  } else if (selectedGame === 'trivia') {
+    triviaEl.classList.remove("hidden");
+    startTrivia();
+  } else {
+    document.getElementById("homepage").classList.remove("hidden");
+  }
+} else if (selectedGame === 'tictactoe') {
     ticEl.classList.remove("hidden");
     setupTicTacToe();
   } else if (selectedGame === 'trivia') {

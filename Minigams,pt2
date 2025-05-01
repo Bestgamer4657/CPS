@@ -74,17 +74,23 @@
 </div>
 
 
-    <button onclick="toggleSettings()">⚙️ Settings</button><br><label for="game-picker">Choose a game:</label>
+    <button onclick="toggleSettings()" style="position: absolute; top: 20px; right: 20px;">⚙️ Settings</button><label for="game-picker">Choose a game:</label>
 <select id="game-picker" onchange="switchGame()">
+  <option value="homepage">🏠 Home</option>
   <option value="cps">CPS Tester</option>
   <option value="tictactoe">Tic Tac Toe</option>
   <option value="trivia">Trivia</option>
-  <option value="settings">⚙️ Settings</option>
+  
 </select>
     
   </div>
 
-  <div id="cps" class="game-container">
+  <div id="homepage" class="game-container">
+  <h2>Welcome to Mini Game Portal</h2>
+  <p>Select a game from the dropdown above to begin playing!</p>
+</div>
+
+<div id="cps" class="game-container hidden">
     <h2>CPS Tester</h2>
     <label>Test Duration: <input id="duration" type="number" value="5" min="1" max="15" /></label>
     <div id="click-area" style="margin: 20px auto; padding: 40px; background: #333; width: 200px; cursor: pointer;">Click to Start</div>
@@ -94,14 +100,25 @@
   </div>
 
   
-    <p id="tictactoe-score">X: 0 | O: 0</p>
-    <button onclick="setupTicTacToe()">Restart Game</button>
+    <div id="tictactoe" class="game-container hidden">
+  <h2>Tic Tac Toe</h2>
+  <select id="game-mode">
+    <option value="1v1">1v1 (Local)</option>
+    <option value="easy">Easy AI</option>
+    <option value="hard">Hard AI</option>
+    <option value="impossible">Impossible AI</option>
+  </select>
+  <div class="grid" id="board"></div>
+  <p id="winner"></p>
+  <p id="tictactoe-score">X: 0 | O: 0</p>
+  <button onclick="setupTicTacToe()">Restart Game</button>
+</div>
   </div>
 
   <div id="trivia" class="game-container hidden">
     <h2>Trivia Game</h2>
     <label for="trivia-category">Choose Category:</label>
-    <select id="trivia-category"$1 onchange="startTrivia()">
+    <select id="trivia-category" onchange="startTrivia()">
       <option value="general">General</option>
       <option value="sports">Sports</option>
       <option value="gaming">Gaming</option>
@@ -121,13 +138,25 @@
     const gamePicker = document.getElementById("game-picker");
 
     function switchGame() {
-  if (gamePicker.value === 'settings') {
-    document.getElementById('settings-panel').classList.remove('hidden');
-    cpsEl.classList.add('hidden');
-    ticEl.classList.add('hidden');
-    triviaEl.classList.add('hidden');
-    return;
+  const selectedGame = gamePicker.value;
+  document.getElementById("homepage").classList.add("hidden");
+  cpsEl.classList.add("hidden");
+  ticEl.classList.add("hidden");
+  triviaEl.classList.add("hidden");
+  document.getElementById('settings-panel').classList.add('hidden');
+
+  if (selectedGame === 'cps') {
+    cpsEl.classList.remove("hidden");
+  } else if (selectedGame === 'tictactoe') {
+    ticEl.classList.remove("hidden");
+    setupTicTacToe();
+  } else if (selectedGame === 'trivia') {
+    triviaEl.classList.remove("hidden");
+    startTrivia();
   } else {
+    document.getElementById("homepage").classList.remove("hidden");
+  }
+} else {
     document.getElementById('settings-panel').classList.add('hidden');
   }
       cpsEl.classList.add("hidden");
@@ -440,6 +469,6 @@ function setupTicTacToe() {
       panel.classList.toggle('hidden');
     }
 </script>
+<button onclick="document.getElementById('game-picker').value = 'homepage'; switchGame();" style="position: fixed; bottom: 20px; left: 20px; z-index: 999;">🏠 Back to Menu</button>
 </body>
 </html>
-

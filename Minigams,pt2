@@ -57,7 +57,7 @@
 </head>
 <body>
   <h1>🎮 Mini Game Portal</h1>
-  <button onclick="toggleSettings()">⚙️ Settings</button>
+  <button onclick="toggleSettings()" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">⚙️ Settings</button>
 <div id="settings-panel" class="hidden" style="margin-top: 10px;">
   <label for="theme-select">Theme:</label>
   <select id="theme-select" onchange="changeTheme()">
@@ -73,14 +73,14 @@
   </select>
 </div>
 
-$1
+
     <label for="game-picker">Choose a game:</label>
-    <select id="game-picker">
+    <select id="game-picker" onchange="switchGame()">
       <option value="cps">CPS Tester</option>
       <option value="tictactoe">Tic Tac Toe</option>
       <option value="trivia">Trivia</option>
     </select>
-    <button onclick="switchGame()">Play</button>
+    
   </div>
 
   <div id="cps" class="game-container">
@@ -92,16 +92,9 @@ $1
     <button id="reset-btn" class="hidden">Reset</button>
   </div>
 
-  <div id="tictactoe" class="game-container hidden">
-    <h2>Tic Tac Toe</h2>
-    <select id="game-mode">
-      <option value="1v1">1v1 (Local)</option>
-      <option value="easy">Easy AI</option>
-      <option value="hard">Hard AI</option>
-      <option value="impossible">Impossible AI</option>
-    </select>
-    <div class="grid" id="board"></div>
-    <p id="winner"></p>
+  $1
+    <p id="tictactoe-score">X: 0 | O: 0</p>
+    <button onclick="setupTicTacToe()">Restart Game</button>
   </div>
 
   <div id="trivia" class="game-container hidden">
@@ -133,6 +126,121 @@ $1
       document.getElementById(gamePicker.value).classList.remove("hidden");
       if (gamePicker.value === 'tictactoe') setupTicTacToe();
       if (gamePicker.value === 'trivia') startTrivia();
+    }
+
+    // === TICTACTOE ===
+    document.getElementById("game-mode").addEventListener("change", setupTicTacToe);
+
+    let xWins = 0;
+let oWins = 0;
+
+function setupTicTacToe() {
+      const board = document.getElementById("board");
+      const winnerText = document.getElementById("winner");
+      const mode = document.getElementById("game-mode").value;
+      board.innerHTML = "";
+      winnerText.textContent = "";
+      let turn = 'X';
+      let cells = Array(9).fill(null);
+
+      for (let i = 0; i < 9; i++) {
+        const btn = document.createElement("button");
+        btn.className = "cell";
+        btn.onclick = () => {
+          if (!btn.textContent && !checkWinner(cells)) {
+            btn.textContent = turn;
+            cells[i] = turn;
+            if (checkWinner(cells)) {
+        winnerText.textContent = `${turn} wins!`;
+        if (turn === 'X') xWins++;
+        else oWins++;
+        document.getElementById("tictactoe-score").textContent = `X: ${xWins} | O: ${oWins}`;
+        return;
+            } else if (!cells.includes(null)) {
+              winnerText.textContent = "It's a draw!";
+              return;
+            }
+            turn = turn === 'X' ? 'O' : 'X';
+            if (mode !== '1v1' && turn === 'O') {
+              setTimeout(() => aiMove(cells, mode), 300);
+            }
+          }
+        };
+        board.appendChild(btn);
+      }
+    }
+
+    function aiMove(cells, mode) {
+      let move;
+      if (mode === 'easy') {
+        const empty = cells.map((v, i) => v ? null : i).filter(v => v !== null);
+        move = empty[Math.floor(Math.random() * empty.length)];
+      } else if (mode === 'hard') {
+        move = bestMove(cells, 'O');
+      } else if (mode === 'impossible') {
+        move = minimax(cells, 'O').index;
+      }
+      if (move != null) {
+        const board = document.getElementById("board");
+        board.children[move].click();
+      }
+    }
+
+    function bestMove(cells, ai) {
+      for (let i = 0; i < cells.length; i++) {
+        if (!cells[i]) return i;
+      }
+    }
+
+    function minimax(newBoard, player) {
+      const availSpots = newBoard.map((v, i) => v ? null : i).filter(v => v !== null);
+      const huPlayer = 'X';
+      const aiPlayer = 'O';
+      if (checkWin(newBoard, huPlayer)) return {score: -10};
+      if (checkWin(newBoard, aiPlayer)) return {score: 10};
+      if (availSpots.length === 0) return {score: 0};
+      const moves = [];
+      for (let i = 0; i < availSpots.length; i++) {
+        const move = {};
+        move.index = availSpots[i];
+        newBoard[availSpots[i]] = player;
+        const result = minimax(newBoard, player === aiPlayer ? huPlayer : aiPlayer);
+        move.score = result.score;
+        newBoard[availSpots[i]] = null;
+        moves.push(move);
+      }
+      let bestMove;
+      if (player === aiPlayer) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      }
+      return moves[bestMove];
+    }
+
+    function checkWinner(cells) {
+      return checkWin(cells, 'X') || checkWin(cells, 'O');
+    }
+
+    function checkWin(board, player) {
+      const winLines = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return winLines.some(([a,b,c]) => board[a] === player && board[b] === player && board[c] === player);
     }
 
     // === CPS TESTER ===

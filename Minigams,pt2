@@ -156,15 +156,7 @@
   } else {
     document.getElementById("homepage").classList.remove("hidden");
   }
-} else {
-    document.getElementById('settings-panel').classList.add('hidden');
-  }
-      cpsEl.classList.add("hidden");
-      ticEl.classList.add("hidden");
-      triviaEl.classList.add("hidden");
-      document.getElementById(gamePicker.value).classList.remove("hidden");
-      if (gamePicker.value === 'tictactoe') setupTicTacToe();
-      if (gamePicker.value === 'trivia') startTrivia();
+}
     }
 
     // === TICTACTOE ===

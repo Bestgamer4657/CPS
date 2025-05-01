@@ -87,6 +87,7 @@
   <div id="homepage" class="game-container">
   <h2>Welcome to Mini Game Portal</h2>
   <p>Select a game from the dropdown above to begin playing!</p>
+<button onclick="switchGame()">▶️ Play Selected Game</button>
 </div>
 
 <div id="cps" class="game-container hidden">

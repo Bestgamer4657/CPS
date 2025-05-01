@@ -75,7 +75,7 @@
 
     <button onclick="toggleSettings()" style="position: absolute; top: 20px; right: 20px;">⚙️ Settings</button><label for="game-picker">Choose a game:</label>
 <select id="game-picker" onchange="switchGame()">
-  <option value="homepage">🏠 Home</option>
+  
   <option value="cps">CPS Tester</option>
   <option value="tictactoe">Tic Tac Toe</option>
   <option value="trivia">Trivia</option>
@@ -84,11 +84,7 @@
     
   </div>
 
-  <div id="homepage" class="game-container">
-  <h2>Welcome to Mini Game Portal</h2>
-  <p>Select a game from the dropdown above to begin playing!</p>
-<button onclick="switchGame()">▶️ Play Selected Game</button>
-</div>
+  
 
 <div id="cps" class="game-container hidden">
     <h2>CPS Tester</h2>
@@ -469,6 +465,6 @@ function setupTicTacToe() {
       panel.classList.toggle('hidden');
     }
 </script>
-<button onclick="document.getElementById('game-picker').value = 'homepage'; switchGame();" style="position: fixed; bottom: 20px; left: 20px; z-index: 999;">🏠 Back to Menu</button>
+<button onclick="document.getElementById('game-picker').value = 'cps'; switchGame();" style="position: fixed; bottom: 20px; left: 20px; z-index: 999;">🏠 Back to Menu</button>
 </body>
 </html>
